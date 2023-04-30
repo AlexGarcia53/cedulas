@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.cedulasservicegrpc.grpc";
+
+service cedulasService{
+    
+    rpc ObtenerCedulas(Empty) returns (CedulasResponse);
+}
+
+message CedulasRequest {
+  
+}
+
+message CedulasResponse {
+  repeated string cedulas = 1;
+}
+
+message Empty{
+
+}
+
