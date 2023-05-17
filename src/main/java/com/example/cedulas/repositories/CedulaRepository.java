@@ -18,8 +18,9 @@ import org.springframework.stereotype.Repository;
 public interface CedulaRepository extends JpaRepository<Cedula, Long>  {
     @Query("SELECT c FROM Cedula c")
     List<Cedula> obtenerCedulas();
-    
 
+    @Query("SELECT c FROM Cedula c WHERE c.cedulaMedico = :cedula")
+    List<Cedula> findByCedulaMedico(@Param("cedula") String cedula);
             
             
 }

@@ -4,6 +4,7 @@
  */
 package com.example.cedulas.services;
 
+import com.cedulasservicegrpc.grpc.Cedulas;
 import com.cedulasservicegrpc.grpc.CedulasResponse;
 import com.cedulasservicegrpc.grpc.Empty;
 import com.cedulasservicegrpc.grpc.cedulasServiceGrpc.cedulasServiceImplBase;
@@ -39,6 +40,13 @@ public class CedulasService extends cedulasServiceImplBase {
         responseObserver.onCompleted();
            
         
+    }
+
+    public Cedula obtenerCedula(String numCedula){
+        List<Cedula> cedulas = cedulaRepository.findByCedulaMedico(numCedula);
+        if(cedulas.isEmpty()) throw new RuntimeException("La cedula no existe");
+        Cedula cedulaMedico = cedulas.get(0);
+        return cedulaMedico;
     }
       
 }
