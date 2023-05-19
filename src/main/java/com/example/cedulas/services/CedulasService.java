@@ -10,6 +10,7 @@ import com.cedulasservicegrpc.grpc.Empty;
 import com.cedulasservicegrpc.grpc.cedulasServiceGrpc.cedulasServiceImplBase;
 import com.example.cedulas.entity.Cedula;
 import com.example.cedulas.repositories.CedulaRepository;
+import com.example.cedulas.security.Encriptacion;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class CedulasService extends cedulasServiceImplBase {
 
     @Autowired
     private CedulaRepository cedulaRepository;
+    @Autowired
+    private Encriptacion encriptacion;
     
     @Override
     public void obtenerCedulas(Empty request, StreamObserver<CedulasResponse> responseObserver) {
@@ -30,7 +33,8 @@ public class CedulasService extends cedulasServiceImplBase {
         List<String> listaCedulas = new ArrayList<>();
         
         for (Cedula cedula : cedulas){
-            listaCedulas.add(cedula.getCedulaMedico());
+            String cedulaEnc = encriptacion.encrypt(cedula.getCedulaMedico());
+            listaCedulas.add(cedulaEnc );
         }
         
         CedulasResponse.Builder response = CedulasResponse.newBuilder()
@@ -46,6 +50,7 @@ public class CedulasService extends cedulasServiceImplBase {
         List<Cedula> cedulas = cedulaRepository.findByCedulaMedico(numCedula);
         if(cedulas.isEmpty()) throw new RuntimeException("La cedula no existe");
         Cedula cedulaMedico = cedulas.get(0);
+        cedulaMedico.setCedulaMedico(encriptacion.encrypt(cedulaMedico.getCedulaMedico()));
         return cedulaMedico;
     }
       
